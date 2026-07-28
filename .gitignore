@@ -1,2 +1,9 @@
 # Banco gerado em tempo de execução
 produtos.db
+
+# Segredos — nunca versionar
+.env
+.env.*
+!.env.exemplo
+*.key
+*.pem
