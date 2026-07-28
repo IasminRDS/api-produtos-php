@@ -38,7 +38,7 @@ function corpoJson(): array
 function validar(array $d): array
 {
     $erros = [];
-    if (empty($d['nome']) || !trim((string) $d['nome'])) {
+    if (!isset($d['nome']) || trim((string) $d['nome']) === '') {
         $erros[] = "O campo 'nome' é obrigatório.";
     }
     if (!isset($d['preco']) || !is_numeric($d['preco']) || (float) $d['preco'] < 0) {
@@ -74,14 +74,19 @@ if (preg_match('#^/produtos/(\d+)$#', $caminho, $m)) {
         if ($erros = validar($d)) {
             resposta(['erros' => $erros], 400);
         }
+        $nome    = trim((string) $d['nome']);
+        $preco   = (float) $d['preco'];
+        $estoque = (int) ($d['estoque'] ?? 0);
+
         $stmt = $pdo->prepare('UPDATE produtos SET nome = ?, preco = ?, estoque = ? WHERE id = ?');
-        $stmt->execute([
-            trim((string) $d['nome']),
-            (float) $d['preco'],
-            (int) ($d['estoque'] ?? 0),
-            $id,
+        $stmt->execute([$nome, $preco, $estoque, $id]);
+
+        resposta([
+            'id'      => $id,
+            'nome'    => $nome,
+            'preco'   => $preco,
+            'estoque' => $estoque,
         ]);
-        resposta(['id' => $id] + $d);
     }
 
     if ($metodo === 'DELETE') {
