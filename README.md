@@ -2,6 +2,7 @@
 
 ![PHP](https://img.shields.io/badge/PHP-8-777BB4?logo=php&logoColor=white)
 ![SQLite](https://img.shields.io/badge/SQLite-003B57?logo=sqlite&logoColor=white)
+[![testes](https://github.com/IasminRDS/api-produtos-php/actions/workflows/ci.yml/badge.svg)](https://github.com/IasminRDS/api-produtos-php/actions/workflows/ci.yml)
 ![License](https://img.shields.io/badge/licença-MIT-blue)
 
 API REST de produtos escrita em **PHP puro** (sem framework), usando **PDO + SQLite** e **prepared statements** (proteção contra SQL Injection).
@@ -36,6 +37,25 @@ php -S localhost:8000 index.php
 ```
 
 A API fica em `http://localhost:8000`.
+
+> O banco padrão é o `produtos.db` ao lado do `index.php`. Para apontar para
+> outro arquivo, defina `PRODUTOS_DB` — é o que os testes usam.
+
+## 🧪 Testes
+
+```bash
+php test_api.php          # 21 testes
+```
+
+Sem framework e sem dependência, como o resto do projeto: o script sobe o
+servidor embutido do PHP contra um SQLite descartável, faz requisições HTTP
+de verdade e derruba tudo no fim — então o que está sendo testado é a mesma
+API que o cliente consome, com roteamento e códigos de status inclusos.
+
+Além do CRUD e da validação, três testes cobrem justamente a afirmação de
+segurança deste README: um `'; DROP TABLE produtos; --` enviado no campo
+`nome` é gravado como texto e devolvido literal, e a tabela continua de pé.
+Sem os *prepared statements*, esses testes falhariam.
 
 ## 📡 Endpoints
 

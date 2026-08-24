@@ -1,0 +1,19 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.3"
+          extensions: pdo_sqlite, sqlite3
+          coverage: none
+      - name: Rodar os testes
+        run: php test_api.php
